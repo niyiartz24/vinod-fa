@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VinodFA | Our Story</title>
+
+  <!-- External styles & icons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Reset & General Styling */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #f4f4f4;
+      color: #333;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      color: #0a1a2f;
+      margin: 2rem 0 0.5rem;
+      text-align: center;
+    }
+
+    .section-text {
+      text-align: center;
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      color: #555;
+    }
+
+    /* Swiper styling */
+    .swiper {
+      max-width: 1000px;
+      margin: 2rem auto;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .swiper-slide {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000; /* fallback background for videos */
+      height: 390px;
+    }
+
+    .swiper-slide img,
+    .swiper-slide video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .slide-caption {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-size: 1rem;
+      max-width: 90%;
+      user-select: none;
+    }
+
+    /* Filter Buttons */
+    .filter-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-buttons button {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      background: #0a1a2f;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      font-size: 1rem;
+    }
+
+    .filter-buttons button.active,
+    .filter-buttons button:hover {
+      background: #005bb5;
+    }
+
+    /* Card Grid */
+    .story-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      padding: 0 1rem 4rem;
+    }
+
+    .story-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      max-width: 320px;
+      width: 100%;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .story-card:hover {
+      transform: translateY(-6px);
+    }
+
+    .story-media img,
+    .story-media video {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .story-content {
+      padding: 1rem;
+      flex-grow: 1;
+    }
+
+    .story-heading {
+      font-size: 1.2rem;
+      color: #0a1a2f;
+      margin-bottom: 0.5rem;
+    }
+
+    .story-desc {
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 768px) {
+      .story-grid {
+        flex-direction: column;
+        align-items: center;
+      }
+      .swiper-slide {
+        height: 250px;
+      }
+      .story-media img,
+      .story-media video {
+        height: 140px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header" id="header">
+    <a href="index.html" class="logo-link">
+      <span>Vinod</span> Football Academy
+    </a>
+    <nav class="navigation" id="navigation">
+      <a href="index.html" class="link">Home</a>
+      <a href="#" class="link">Story</a>
+      <a href="community.html" class="link">Community</a>
+      <a href="contact.html" class="link">Contact us</a>
+    </nav>
+    <p>Highlight Reels • Player Achievements • Match Stories</p>
+    <button id="darkModeToggle" class="dark-toggle">
+  <i class='bx bx-moon'></i>
+</button>
+
+  </header>
+
+  <section>
+    <div class="swiper mySwiper">
+      <div class="swiper-wrapper">
+
+        <div class="swiper-slide">
+          <video src="VID-20250607-WA0164.mp4" controls muted playsinline></video>
+          <div class="slide-caption">Last-Minute Winner: U-18 vs Dynamo</div>
+        </div>
+
+        <div class="swiper-slide">
+          <img src="IMG-20250611-WA0136.jpg" alt="Victory Celebration" />
+          <div class="slide-caption">Team VinodFA 2025</div>
+        </div>
+
+        <div class="swiper-slide">
+          <img src="IMG-20250611-WA0140.jpg" alt="Victory Celebration" />
+          <div class="slide-caption">Team VinodFA 2025</div>
+        </div>
+
+        <div class="swiper-slide">
+          <img src="IMG-20250611-WA0132.jpg" alt="Training Drill" />
+          <div class="slide-caption">Behind the Scenes: Daily Grind</div>
+        </div>
+
+      </div>
+
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-pagination"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Our Story</h2>
+    <p class="section-text">Explore the passion, moments, and milestones that define us.</p>
+
+    <div class="filter-buttons">
+      <button class="active" onclick="filterCards('all', event)">All</button>
+      <button onclick="filterCards('highlight', event)">Highlights</button>
+      <button onclick="filterCards('player', event)">Players</button>
+      <button onclick="filterCards('achievement', event)">Achievements</button>
+    </div>
+
+    <div class="story-grid">
+
+      <!-- Highlight -->
+      <div class="story-card" data-category="highlight">
+        <div class="story-media">
+          <video src="VID-20250607-WA0165.mp4" controls></video>
+        </div>
+        <div class="story-content">
+          <h3 class="story-heading">Epic Comeback</h3>
+          <p class="story-desc">Our U-18 team turned the game around in the final 5 minutes.</p>
+        </div>
+      </div>
+
+      <!-- Player -->
+      <div class="story-card" data-category="player">
+        <div class="story-media">
+          <img src="IMG-20250606-WA0114.jpg" alt="Player of the Month" />
+        </div>
+        <div class="story-content">
+          <h3 class="story-heading">Olusesi Ganiyu</h3>
+          <p class="story-desc">A young talented goalkeeper</p>
+        </div>
+      </div>
+      <div class="story-card" data-category="player">
+        <div class="story-media">
+          <img src="IMG-20250606-WA0115.jpg" alt="Player of the Month" />
+        </div>
+        <div class="story-content">
+          <h3 class="story-heading"></h3>
+          <p class="story-desc"></p>
+        </div>
+      </div>
+      <div class="story-card" data-category="player">
+        <div class="story-media">
+          <img src="IMG-20250606-WA0116.jpg" alt="Player of the Month" />
+        </div>
+        <div class="story-content">
+          <h3 class="story-heading"></h3>
+          <p class="story-desc"></p>
+        </div>
+      </div>
+       <div class="story-card" data-category="player">
+        <div class="story-media">
+          <img src="IMG-20250606-WA0117.jpg" alt="Player of the Month" />
+        </div>
+        <div class="story-content">
+          <h3 class="story-heading"></h3>
+          <p class="story-desc"></p>
+        </div>
+      </div>
+       <div class="story-card" data-category="player">
+        <div class="story-media">
+          <img src="IMG-20250606-WA0118.jpg" alt="Player of the Month" />
+        </div>
+        <div class="story-content">
+          <h3 class="story-heading"></h3>
+          <p class="story-desc"></p>
+        </div>
+      </div>
+       <div class="story-card" data-category="player">
+        <div class="story-media">
+          <img src="IMG-20250606-WA0119.jpg" alt="Player of the Month" />
+        </div>
+        <div class="story-content">
+          <h3 class="story-heading"></h3>
+          <p class="story-desc"></p>
+        </div>
+      </div>
+       <div class="story-card" data-category="player">
+        <div class="story-media">
+          <img src="IMG-20250606-WA0134.jpg" alt="Player of the Month" />
+        </div>
+        <div class="story-content">
+          <h3 class="story-heading"></h3>
+          <p class="story-desc"></p>
+        </div>
+      </div>
+      <!-- Achievement -->
+      <div class="story-card" data-category="achievement">
+        <div class="story-media">
+          <img src="trophy.jpg" alt="Championship Trophy" />
+        </div>
+        <div class="story-content">
+          <h3 class="story-heading">Regional Cup Champions</h3>
+          <p class="story-desc">We won the 2025 Regional Cup with an unbeaten record.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Swiper JS -->
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+  <script>
+    // Initialize Swiper
+    const swiper = new Swiper(".mySwiper", {
+      loop: true,
+      autoplay: {
+        delay: 5000,
+        disableOnInteraction: false,
+      },
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+    });
+
+    // Filter function
+    function filterCards(category, event) {
+      const cards = document.querySelectorAll('.story-card');
+      const buttons = document.querySelectorAll('.filter-buttons button');
+
+      buttons.forEach(btn => btn.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+
+      cards.forEach(card => {
+        card.style.display = category === 'all' || card.dataset.category === category ? 'flex' : 'none';
+      });
+    }
+  </script>
+  
+<div id="page-loader">
+  <div class="spinner"></div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

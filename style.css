@@ -1,0 +1,491 @@
+:root {
+  --primary-color: #004080;
+  --accent-color: #f9a825;
+  --text-color: #333;
+  --bg-color: #f4f4f4;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* Smooth transition for theme changes */
+body,
+.header,
+.section,
+.card,
+.coach-card,
+.contact-form,
+.btn-join,
+.btn-send,
+a,
+input,
+textarea {
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+
+.dark-toggle i {
+  transition: color 0.4s ease;
+}
+
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--primary-color);
+  color: white;
+  padding: 1rem 2rem;
+  flex-wrap: wrap;
+}
+
+.logo-link {
+  font-size: 1.5rem;
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+}
+
+.logo-link span {
+  color: var(--accent-color);
+}
+
+.navigation {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.navigation a {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem;
+}
+
+.navigation a:hover {
+  background: var(--accent-color);
+  color: #000;
+  border-radius: 5px;
+}
+
+.controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-promo,
+.btn-signup,
+.btn-subscribe {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-promo {
+  background: var(--accent-color);
+  color: #000;
+}
+
+.btn-signup,
+.btn-subscribe {
+  background: #fff;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+
+.btn-signup:hover,
+.btn-subscribe:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+/* Section: Home */
+.home {
+  padding: 3rem 2rem;
+}
+
+.containers {
+  max-width: 1200px;
+  margin: auto;
+}
+
+.items {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.item {
+  flex: 1 1 300px;
+}
+
+.item-image img {
+  max-width: 100%;
+  border-radius: 10px;
+}
+
+.title {
+  font-size: 2.2rem;
+  color: var(--primary-color);
+}
+
+.desc {
+  margin: 1rem 0;
+  font-size: 1rem;
+  color: #555;
+}
+
+.buttons {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+
+.section.about {
+  padding: 4rem 2rem;
+  background-color: #ffffff;
+  color: var(--text-color);
+  text-align: center;
+}
+
+.section.about .containers {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.section-text {
+  font-size: 1.1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+
+/* Programs Section */
+.program-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.card {
+  background-color: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  max-width: 300px;
+}
+
+/* Coaches */
+.coach-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.coach-card {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0,0,0,0.08);
+  max-width: 250px;
+}
+
+.coach-photo {
+  width: 100%;
+  max-width: 200px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+
+/* Join Us Section */
+.join-us {
+  background-color: #004080;
+  color: white;
+}
+
+.join-us h2 {
+  font-size: 2rem;
+}
+
+.btn-join {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: white;
+  color:#004080;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.btn-join:hover {
+  background: #e0e0ff;
+}
+
+/* Contact */
+.contact-form {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.btn-send {
+  background-color:  #004080;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-send:hover {
+  background-color:  #71a1d1;
+}
+   .containers .btn-sci {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+   .containers .btn-sci .sci{
+    margin-left: 20px;
+}
+.containers .btn-sci .sci a{
+    display: inline-flex;
+    padding: 8px;
+    border: 2px solid #004080;
+    border-radius: 50%;
+    text-decoration: none;
+}
+
+.containers .btn-sci .sci a:hover{
+   background-color:  #71a1d1;
+}
+.swiper-container {
+  width: 100%;
+  padding: 2rem 0;
+  background: #0a1a2f;
+}
+
+.mySwiper {
+  width: 90%;
+  max-width: 1000px;
+  margin: auto;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.swiper-slide {
+  position: relative;
+  text-align: center;
+  background: #000;
+}
+
+.swiper-slide video,
+.swiper-slide img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+}
+
+.slide-caption {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  color: white;
+  font-size: 1.2rem;
+  background: rgba(0,0,0,0.5);
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: white;
+}
+
+.swiper-pagination-bullet-active {
+  background: white;
+}
+
+body.fade-out {
+  opacity: 0;
+  transition: opacity 1s ease; /* was 0.4s */
+}
+body.fade-in {
+  opacity: 1;
+  transition: opacity 1s ease; /* was 0.4s */
+}
+
+/* Dark mode styles */
+body.dark-mode {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+
+body.dark-mode .section,
+body.dark-mode .card,
+body.dark-mode .coach-card,
+body.dark-mode .contact-form,
+body.dark-mode .btn-join,
+body.dark-mode .btn-send {
+  background-color: #1e1e1e;
+  color: #fff;
+  border-color: #333;
+}
+
+body.dark-mode .header{
+   background-color: #464343;
+  color: #fff;
+  border-color: #333;
+}
+
+body.dark-mode a {
+  color: #9cdcfe;
+}
+
+body.dark-mode p {
+  color: white;
+}
+
+body.dark-mode .in{
+  color: black;
+}
+
+body.dark-mode h2{
+  color: rgb(82, 82, 230);
+}
+
+.dark-toggle {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #333;
+  cursor: pointer;
+  margin-left: 15px;
+}
+
+body.dark-mode .dark-toggle {
+  color: #fff;
+}
+
+/* Loader Styling */
+#page-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #0a1a2f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 1;
+  visibility: visible;
+   transition: opacity 1s ease, visibility 1s;
+}
+#page-loader.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(255,255,255,0.2);
+  border-top: 5px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navigation,
+  .controls {
+    width: 100%;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+
+  .items {
+    flex-direction: column-reverse;
+    text-align: center;
+  }
+
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .btn-promo,
+  .btn-signup,
+  .btn-subscribe {
+    width: 100%;
+  }
+}
+.center-img{
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 350px;
+  margin-top: 100px;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+}
+
+.center-img img{
+  margin-bottom: 20px;
+  margin-right: 50px;
+  border: 2px solid whitesmoke;
+  border-radius: 30px;
+}
+
+#title{
+  display: flex;
+  text-align: center;
+  margin-bottom: 150px;
+  margin-left: 120px;
+}
+
+#info{
+  display: flex;
+  text-align: center;
+  margin-bottom: 150px;
+  margin-right: 120px;
+  font-size: 30px;
+}
