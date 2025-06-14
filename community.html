@@ -149,17 +149,22 @@
   <h2>Team News</h2>
   <div class="news-grid">
     <div class="news-card">
-      <img src="news1.jpg" alt="News">
+      <img src="IMG-20250613-WA0392.jpg" alt="News">
       <div class="content">
-        <h3>U-16 Makes It to the Finals</h3>
-        <p class="in">Our U-16 team has secured a place in the finals after a thrilling 3-2 win.</p>
+        <h3>Kickstarting the league with victory</h3>
+        <p class="in">A dream start to our ikeja super league...</p>
+       <a href="#" class="btnn" onclick="openNews(0)">Read more</a>
+
+
       </div>
     </div>
     <div class="news-card">
-      <img src="news2.jpg" alt="News">
+      <img src="0483f178988540a197a02ba9cc816b09.jpg" alt="News" id="news2">
       <div class="content">
-        <h3>New Training Kits Launched</h3>
-        <p class="in">Check out the academy's brand new training kits for the 2025 season.</p>
+        <h3>Full time at home</h3>
+        <p class="in">Back to back 2-0 win.Clean shit...</p>
+        <a href="#" class="btnn" onclick="openNews(1)">Read more</a>
+
       </div>
     </div>
   </div>
@@ -212,6 +217,79 @@
 <div id="page-loader">
   <div class="spinner"></div>
 </div>
+<!-- News Modal -->
+<div id="newsModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); justify-content: center; align-items: center;">
+  <div class="modal-content" style="background: white; padding: 1rem; border-radius: 10px; max-width: 600px; width: 90%; position: relative; overflow-y: auto; max-height: 90vh;">
+    <span class="close" onclick="closeNews()" style="position: absolute; top: 10px; right: 15px; font-size: 1.5rem; cursor: pointer;">&times;</span>
+    
+    <img id="modalImage" src="" alt="News Image" style="width: 100%; border-radius: 10px; margin-bottom: 1rem;" />
+    <h3 id="modalTitle">Full News</h3>
+    <p id="modalBody"></p>
+    
+    <div style="margin-top: 1rem; text-align: center;">
+      <button onclick="showPrev()" style="margin-right: 1rem;">⬅ Prev</button>
+      <button onclick="showNext()">Next ➡</button>
+    </div>
+  </div>
+</div>
+
+
+
 <script src="script.js"></script>
+<script>
+  const newsData = [
+    {
+      title: "Kickstarting the league with victory",
+      text: "A dream start to our Ikeja Super League campaign, dominating possession and showcasing skill across the pitch. Our team is on fire this season!",
+      img: "IMG-20250613-WA0392.jpg"
+    },
+    {
+      title: "Full time at home",
+      text: "Another solid performance at home. Back-to-back 2-0 wins with clean sheets. Cohesion. Confidence. The squad remains unbeaten and confident. Our fortress stands strong. 2 games, 6 points. The journey continues in the Ikeja Super League.",
+      img: "0483f178988540a197a02ba9cc816b09.jpg"
+    }
+    // Add more news here if needed
+  ];
+
+  let currentNewsIndex = 0;
+
+  function openNews(index) {
+    currentNewsIndex = index;
+    const modal = document.getElementById('newsModal');
+    const image = document.getElementById('modalImage');
+    const title = document.getElementById('modalTitle');
+    const body = document.getElementById('modalBody');
+
+    const news = newsData[index];
+    image.src = news.img;
+    title.textContent = news.title;
+    body.textContent = news.text;
+
+    modal.style.display = 'flex';
+  }
+
+  function showPrev() {
+    currentNewsIndex = (currentNewsIndex - 1 + newsData.length) % newsData.length;
+    openNews(currentNewsIndex);
+  }
+
+  function showNext() {
+    currentNewsIndex = (currentNewsIndex + 1) % newsData.length;
+    openNews(currentNewsIndex);
+  }
+
+  function closeNews() {
+    document.getElementById('newsModal').style.display = 'none';
+  }
+
+  window.onclick = function(event) {
+    const modal = document.getElementById('newsModal');
+    if (event.target === modal) {
+      closeNews();
+    }
+  }
+</script>
+
+
 </body>
 </html>
