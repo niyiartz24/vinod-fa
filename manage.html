@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | Manage Content</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0; padding: 0;
+      background: #f4f4f4;
+      color: #333;
+    }
+    header {
+      background: #0a1a2f;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 { margin: 0; }
+    .back-btn {
+      background: #0077cc;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background 0.3s ease;
+    }
+    .back-btn:hover { background: #005bb5; }
+
+    h2 {
+      color: #0a1a2f;
+      margin: 2rem 0 1rem;
+      border-left: 5px solid #0a1a2f;
+      padding-left: 0.5rem;
+    }
+
+    .item-list { margin: 1rem; }
+    .item-card {
+      background: white;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+    .item-card h4 { margin: 0; color: #0a1a2f; }
+    .item-card p { font-size: 0.9rem; color: #555; }
+    .item-card button {
+      margin-top: 0.5rem;
+      margin-right: 0.5rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: 0.3s;
+    }
+    .edit-btn { background: #0a1a2f; color: white; }
+    .edit-btn:hover { background: #005bb5; }
+    .delete-btn { background: crimson; color: white; }
+    .delete-btn:hover { background: darkred; }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      justify-content: center; align-items: center;
+      z-index: 1000;
+    }
+    .modal-content {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      width: 90%; max-width: 500px;
+      position: relative;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn { from {opacity:0; transform: scale(0.95);} to {opacity:1; transform: scale(1);} }
+    .close-btn {
+      position: absolute; top: 10px; right: 15px;
+      cursor: pointer; font-size: 1.5rem; color: #333;
+    }
+    .close-btn:hover { color: crimson; }
+
+    input, textarea, select {
+      width: 100%; padding: 0.7rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+    button.save-btn {
+      background: #0a1a2f;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button.save-btn:hover { background: #005bb5; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Manage Content</h1>
+    <button class="back-btn" onclick="window.location.href='admin.html'">⬅ Back to Dashboard</button>
+  </header>
+
+  <h2>News</h2>
+  <div id="news-list" class="item-list"></div>
+
+  <h2>Fixtures</h2>
+  <div id="fixtures-list" class="item-list"></div>
+
+  <h2>Stories</h2>
+  <div id="stories-list" class="item-list"></div>
+
+  <!-- Edit Modal -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <h3>Edit Item</h3>
+      <form id="editForm">
+        <input type="hidden" id="editId">
+        <input type="hidden" id="editType">
+
+        <label>Title</label>
+        <input type="text" id="editTitle">
+
+        <label>Description / Summary</label>
+        <textarea id="editDescription"></textarea>
+
+        <label>Update Media (optional)</label>
+        <input type="file" id="editMedia" accept="image/*,video/*">
+
+        <div id="fixtureFields" style="display:none;">
+          <label>Date</label>
+          <input type="date" id="editDate">
+          <label>Time</label>
+          <input type="time" id="editTime">
+          <label>Opponent</label>
+          <input type="text" id="editOpponent">
+          <label>Venue</label>
+          <input type="text" id="editVenue">
+          <label>Status</label>
+          <select id="editStatus">
+            <option value="upcoming">Upcoming</option>
+            <option value="finished">Finished</option>
+            <option value="postponed">Postponed</option>
+          </select>
+        </div>
+
+        <button type="submit" class="save-btn">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import {
+      getFirestore, collection, onSnapshot, doc, deleteDoc, updateDoc
+    } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+    import {
+      getStorage, ref, uploadBytes, getDownloadURL
+    } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCRQUjX6hPd79gFmrySgzjHwgeP61-1myI",
+      authDomain: "vinodfa-b085a.firebaseapp.com",
+      projectId: "vinodfa-b085a",
+      storageBucket: "vinodfa-b085a.appspot.com",
+      messagingSenderId: "692083333518",
+      appId: "1:692083333518:web:2b32948d357e5067222cdf"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    function renderItem(container, id, data, type) {
+      const div = document.createElement("div");
+      div.className = "item-card";
+      div.innerHTML = `
+        <h4>${data.title || data.opponent || "Untitled"}</h4>
+        <p>${data.summary || data.description || data.date || ""}</p>
+        <button class="edit-btn" onclick="editItem('${type}','${id}', ${JSON.stringify(data).replace(/"/g, '&quot;')})">Edit</button>
+        <button class="delete-btn" onclick="deleteItem('${type}','${id}')">Delete</button>
+      `;
+      container.appendChild(div);
+    }
+
+    // Real-time News
+    onSnapshot(collection(db, "news"), snap => {
+      const c = document.getElementById("news-list");
+      c.innerHTML = "";
+      snap.forEach(d => renderItem(c, d.id, d.data(), "news"));
+    });
+
+    // Real-time Fixtures
+    onSnapshot(collection(db, "fixtures"), snap => {
+      const c = document.getElementById("fixtures-list");
+      c.innerHTML = "";
+      snap.forEach(d => renderItem(c, d.id, d.data(), "fixtures"));
+    });
+
+    // Real-time Stories
+    onSnapshot(collection(db, "stories"), snap => {
+      const c = document.getElementById("stories-list");
+      c.innerHTML = "";
+      snap.forEach(d => renderItem(c, d.id, d.data(), "stories"));
+    });
+
+    // Delete
+    window.deleteItem = async function(type, id) {
+      if (confirm("Delete this item?")) {
+        await deleteDoc(doc(db, type, id));
+        alert("Deleted successfully");
+      }
+    };
+
+    // Edit
+    window.editItem = function(type, id, data) {
+      document.getElementById("editId").value = id;
+      document.getElementById("editType").value = type;
+
+      document.getElementById("editTitle").value = data.title || data.opponent || "";
+      document.getElementById("editDescription").value = data.summary || data.description || "";
+
+      if (type === "fixtures") {
+        document.getElementById("fixtureFields").style.display = "block";
+        document.getElementById("editDate").value = data.date || "";
+        document.getElementById("editTime").value = data.time || "";
+        document.getElementById("editOpponent").value = data.opponent || "";
+        document.getElementById("editVenue").value = data.venue || "";
+        document.getElementById("editStatus").value = data.status || "upcoming";
+      } else {
+        document.getElementById("fixtureFields").style.display = "none";
+      }
+
+      document.getElementById("editModal").style.display = "flex";
+    };
+
+    window.closeModal = function() {
+      document.getElementById("editModal").style.display = "none";
+    };
+
+    // Save updates
+    document.getElementById("editForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const id = document.getElementById("editId").value;
+      const type = document.getElementById("editType").value;
+
+      let updatedData = {
+        title: document.getElementById("editTitle").value,
+        summary: document.getElementById("editDescription").value,
+        description: document.getElementById("editDescription").value,
+      };
+
+      if (type === "fixtures") {
+        updatedData = {
+          opponent: document.getElementById("editOpponent").value,
+          date: document.getElementById("editDate").value,
+          time: document.getElementById("editTime").value,
+          venue: document.getElementById("editVenue").value,
+          status: document.getElementById("editStatus").value,
+        };
+      }
+
+      // Check if media update
+      const file = document.getElementById("editMedia").files[0];
+      if (file) {
+        const folder = type === "stories" ? "stories-media" : type === "news" ? "news-images" : "fixtures";
+        const fileRef = ref(storage, `${folder}/${Date.now()}-${file.name}`);
+        await uploadBytes(fileRef, file);
+        const url = await getDownloadURL(fileRef);
+        updatedData.mediaUrl = url;
+        updatedData.imageUrl = url;
+      }
+
+      await updateDoc(doc(db, type, id), updatedData);
+      alert("Item updated successfully!");
+      closeModal();
+    });
+  </script>
+</body>
+</html>

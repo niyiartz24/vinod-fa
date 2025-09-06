@@ -123,6 +123,83 @@
       text-align: center;
       padding: 1rem;
     }
+  /* Modal overlay */
+  #newsModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  /* Modal box */
+  #newsModal .modal-content {
+    background: white;
+    border-radius: 10px;
+    max-width: 800px;
+    width: 90%;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    max-height: 90vh;
+    overflow: hidden;
+    padding: 1rem;
+  }
+
+  /* Media container */
+  #modalMediaContainer {
+    overflow: hidden;
+    border-radius: 10px;
+  }
+
+  #modalMediaContainer img,
+  #modalMediaContainer video {
+    width: 100%;
+    border-radius: 10px;
+    display: block;
+  }
+
+  /* Text side */
+  #newsModal .text-side {
+    overflow-y: auto;
+    padding-right: 0.5rem;
+  }
+
+  #newsModal h3 {
+    margin-top: 0;
+    color: #0a1a2f;
+  }
+
+  #newsModal p {
+    line-height: 1.6;
+    color: #444;
+  }
+
+  /* Close button */
+  #newsModal .close {
+    position: absolute;
+    top: 10px; right: 15px;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  /* Mobile responsive: stack layout */
+  @media (max-width: 768px) {
+    #newsModal .modal-content {
+      grid-template-columns: 1fr;
+      max-height: 90vh;
+    }
+    #modalMediaContainer {
+      max-height: 40vh;
+    }
+    #newsModal .text-side {
+      max-height: 50vh;
+    }
+  }
   </style>
 </head>
 <body>
@@ -147,7 +224,7 @@
 
 <section class="section">
   <h2>Team News</h2>
-  <div class="news-grid">
+  <div class="news-grid" id="news-grid">
     <div class="news-card">
       <img src="IMG-20250613-WA0392.jpg" alt="News">
       <div class="content">
@@ -167,6 +244,7 @@
 
       </div>
     </div>
+    <!-- News from Firestore will load here -->
   </div>
 </section>
 
@@ -182,24 +260,12 @@
         <th>Status</th>
       </tr>
     </thead>
-    <tbody>
-      <tr>
-        <td>June 21, 2025</td>
-        <td>4:00 PM</td>
-        <td>Unification fc</td>
-        <td>Away</td>
-        <td>Upcoming</td>
-      </tr>
-      <tr>
-        <td>June 28, 2025</td>
-        <td>4:00 PM</td>
-        <td>Austenplus fc</td>
-        <td>Away</td>
-        <td>Upcoming</td>
-      </tr>
+    <tbody id="fixtures-body">
+      <!-- Fixtures from Firestore will load here -->
     </tbody>
   </table>
 </section>
+
 
 <section class="newsletter">
   <h2>Stay Updated</h2>
@@ -218,116 +284,187 @@
   <div class="spinner"></div>
 </div>
 <!-- News Modal -->
-<div id="newsModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); justify-content: center; align-items: center;">
-  <div class="modal-content" style="background: white; padding: 1rem; border-radius: 10px; max-width: 600px; width: 90%; position: relative; overflow-y: auto; max-height: 90vh;">
-    <span class="close" onclick="closeNews()" style="position: absolute; top: 10px; right: 15px; font-size: 1.5rem; cursor: pointer;">&times;</span>
-    
-    <img id="modalImage" src="" alt="News Image" style="width: 100%; border-radius: 10px; margin-bottom: 1rem;" />
-    <h3 id="modalTitle">Full News</h3>
-    <p id="modalBody"></p>
-    
-    <div style="margin-top: 1rem; text-align: center;">
-      <button onclick="showPrev()" style="margin-right: 1rem;">⬅ Prev</button>
-      <button onclick="showNext()">Next ➡</button>
+<div id="newsModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeNews()">&times;</span>
+
+    <!-- Left side (media) -->
+    <div id="modalMediaContainer">
+      <!-- Image or Video will load here -->
+    </div>
+
+    <!-- Right side (text) -->
+    <div class="text-side">
+      <h3 id="modalTitle">Full News</h3>
+      <p id="modalBody"></p>
+      <div style="margin-top:1rem; text-align:center;">
+        <button onclick="showPrev()" style="margin-right:1rem;">⬅ Prev</button>
+        <button onclick="showNext()">Next ➡</button>
+      </div>
     </div>
   </div>
-  <div id="swipeHint" class="swipe-hint">
-  <span>⬅️ Swipe to view more ➡️</span>
-</div>
-
 </div>
 
 
 
-<script src="script.js"></script>
+
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+  import { 
+    getFirestore, collection, query, orderBy, onSnapshot 
+  } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCRQUjX6hPd79gFmrySgzjHwgeP61-1myI",
+    authDomain: "vinodfa-b085a.firebaseapp.com",
+    projectId: "vinodfa-b085a",
+    storageBucket: "vinodfa-b085a.appspot.com",
+    messagingSenderId: "692083333518",
+    appId: "1:692083333518:web:2b32948d357e5067222cdf"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // ================== Realtime News ==================
+  const newsGrid = document.getElementById("news-grid");
+  const newsQuery = query(collection(db, "news"), orderBy("createdAt", "desc"));
+  window.newsData = [];
+
+  onSnapshot(newsQuery, (snapshot) => {
+    newsGrid.innerHTML = "";
+    window.newsData = snapshot.docs.map(doc => doc.data());
+
+    window.newsData.forEach((news, index) => {
+      const newsCard = document.createElement("div");
+      newsCard.classList.add("news-card");
+
+      // Detect video or image
+      let mediaElement = "";
+      if (news.imageUrl && news.imageUrl.endsWith(".mp4")) {
+        mediaElement = `<video src="${news.imageUrl}" controls style="width:100%; height:180px; object-fit:cover;"></video>`;
+      } else {
+        mediaElement = `<img src="${news.imageUrl || 'default-news.jpg'}" alt="${news.title}">`;
+      }
+
+      newsCard.innerHTML = `
+        ${mediaElement}
+        <div class="content">
+          <h3>${news.title}</h3>
+          <p class="in">${news.summary || ''}</p>
+          <a href="#" class="btnn" onclick="openNews(${index})">Read more</a>
+        </div>
+      `;
+      newsGrid.appendChild(newsCard);
+    });
+  });
+
+  // ================== Realtime Fixtures ==================
+  const fixturesBody = document.getElementById("fixtures-body");
+  const fixtureQuery = query(collection(db, "fixtures"), orderBy("date", "asc"));
+
+  // Hide loader once first data is fetched
+function hideLoader() {
+  const loader = document.getElementById("page-loader");
+  if (loader) loader.style.display = "none";
+}
+
+// Call hideLoader once news & fixtures load at least once
+let newsLoaded = false;
+let fixturesLoaded = false;
+
+onSnapshot(newsQuery, (snapshot) => {
+  newsGrid.innerHTML = "";
+  window.newsData = [];
+
+  snapshot.forEach((doc, index) => {
+    const news = doc.data();
+    window.newsData.push(news);
+
+    const newsCard = document.createElement("div");
+    newsCard.classList.add("news-card", "fade-in");
+
+    newsCard.innerHTML = `
+      <img src="${news.imageUrl || 'default-news.jpg'}" alt="${news.title}">
+      <div class="content">
+        <h3>${news.title}</h3>
+        <p class="in">${news.summary || ''}</p>
+        <a href="#" class="btnn" onclick="openNews(${index})">Read more</a>
+      </div>
+    `;
+
+    newsGrid.appendChild(newsCard);
+  });
+
+  newsLoaded = true;
+  if (fixturesLoaded) hideLoader();
+});
+
+onSnapshot(fixtureQuery, (snapshot) => {
+  fixturesBody.innerHTML = "";
+
+  snapshot.forEach(doc => {
+    const f = doc.data();
+    const row = document.createElement("tr");
+    row.classList.add("fade-in");
+    row.innerHTML = `
+      <td>${f.date}</td>
+      <td>${f.time}</td>
+      <td>${f.opponent}</td>
+      <td>${f.venue}</td>
+      <td>${f.status}</td>
+    `;
+    fixturesBody.appendChild(row);
+  });
+
+  fixturesLoaded = true;
+  if (newsLoaded) hideLoader();
+});
+
+</script>
+
 <script>
-  const newsData = [
-    {
-      title: "Kickstarting the league with victory",
-      text: "A dream start to our Ikeja Super League campaign, dominating possession and showcasing skill across the pitch. Our team is on fire this season!",
-      img: "IMG-20250613-WA0392.jpg"
-    },
-    {
-      title: "Full time at home",
-      text: "Another solid performance at home. Back-to-back 2-0 wins with clean sheets. Cohesion. Confidence. The squad remains unbeaten and confident. Our fortress stands strong. 2 games, 6 points. The journey continues in the Ikeja Super League.",
-      img: "0483f178988540a197a02ba9cc816b09.jpg"
-    }
-    // Add more news here if needed
-  ];
-
   let currentNewsIndex = 0;
 
   function openNews(index) {
     currentNewsIndex = index;
     const modal = document.getElementById('newsModal');
-    const image = document.getElementById('modalImage');
     const title = document.getElementById('modalTitle');
     const body = document.getElementById('modalBody');
+    const mediaContainer = document.getElementById('modalMediaContainer');
 
-    const news = newsData[index];
-    image.src = news.img;
+    const news = window.newsData[index];
+
+    // Replace media dynamically
+    if (news.imageUrl && news.imageUrl.endsWith(".mp4")) {
+      mediaContainer.innerHTML = `<video src="${news.imageUrl}" controls style="width:100%; border-radius:10px;"></video>`;
+    } else {
+      mediaContainer.innerHTML = `<img src="${news.imageUrl || 'default-news.jpg'}" alt="News Image" style="width:100%; border-radius:10px;">`;
+    }
+
     title.textContent = news.title;
-    body.textContent = news.text;
+    body.textContent = news.body || news.summary || "";
 
     modal.style.display = 'flex';
   }
 
   function showPrev() {
-    currentNewsIndex = (currentNewsIndex - 1 + newsData.length) % newsData.length;
+    currentNewsIndex = (currentNewsIndex - 1 + window.newsData.length) % window.newsData.length;
     openNews(currentNewsIndex);
   }
 
   function showNext() {
-    currentNewsIndex = (currentNewsIndex + 1) % newsData.length;
+    currentNewsIndex = (currentNewsIndex + 1) % window.newsData.length;
     openNews(currentNewsIndex);
   }
 
   function closeNews() {
     document.getElementById('newsModal').style.display = 'none';
   }
-
-  window.onclick = function(event) {
-    const modal = document.getElementById('newsModal');
-    if (event.target === modal) {
-      closeNews();
-    }
-  }
-
-    let touchStartX = 0;
-  let touchEndX = 0;
-
-  const modal = document.getElementById('newsModal');
-
-  modal.addEventListener('touchstart', function (e) {
-    touchStartX = e.changedTouches[0].screenX;
-  }, false);
-
-  modal.addEventListener('touchend', function (e) {
-    touchEndX = e.changedTouches[0].screenX;
-    handleGesture();
-  }, false);
-
-  function handleGesture() {
-    const diff = touchEndX - touchStartX;
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) {
-        showPrev(); // Swipe right → Previous
-      } else {
-        showNext(); // Swipe left → Next
-      }
-    }
-  }
-
-    function hideSwipeHint() {
-    const hint = document.getElementById('swipeHint');
-    if (hint) hint.style.display = 'none';
-  }
-
-  // Hide on first swipe or button click
-  document.getElementById('newsModal').addEventListener('touchend', hideSwipeHint);
-  document.querySelector('.prev').addEventListener('click', hideSwipeHint);
-  document.querySelector('.next').addEventListener('click', hideSwipeHint);
 </script>
+
+
 
 
 </body>
