@@ -112,7 +112,6 @@
       allStories = snapshot.docs.map(doc => doc.data());
       displayStories(document.querySelector(".filter-buttons button.active")?.dataset.category || "all");
 
-      // ✅ Hide page loader once stories are fetched
       const loader = document.getElementById("page-loader");
       if (loader) loader.style.display = "none";
     });
@@ -128,13 +127,14 @@
         card.classList.add("story-card");
         card.setAttribute("data-category", story.category);
 
-        const isVideo = story.mediaUrl.match(/\.(mp4|mov|webm|ogg)$/i);
+        const media = story.mediaBase64 || "default-news.jpg";
+        const isVideo = media.startsWith("data:video");
 
         card.innerHTML = `
           <div class="story-media">
             ${isVideo 
-              ? `<video src="${story.mediaUrl}" controls></video>` 
-              : `<img src="${story.mediaUrl}" alt="${story.title}">`}
+              ? `<video src="${media}" controls></video>` 
+              : `<img src="${media}" alt="${story.title}">`}
           </div>
           <div class="story-content">
             <h3 class="story-heading">${story.title}</h3>
@@ -161,14 +161,15 @@
 
       snapshot.forEach(doc => {
         const story = doc.data();
-        const isVideo = story.mediaUrl.match(/\.(mp4|mov|webm|ogg)$/i);
+        const media = story.mediaBase64 || "default-news.jpg";
+        const isVideo = media.startsWith("data:video");
 
         const slide = document.createElement("div");
         slide.classList.add("swiper-slide");
         slide.innerHTML = `
           ${isVideo 
-            ? `<video src="${story.mediaUrl}" controls muted playsinline></video>` 
-            : `<img src="${story.mediaUrl}" alt="${story.title}">`}
+            ? `<video src="${media}" controls muted playsinline></video>` 
+            : `<img src="${media}" alt="${story.title}">`}
           <div class="slide-caption">${story.title}</div>
         `;
         swiperWrapper.appendChild(slide);
@@ -196,6 +197,7 @@
   loadStories();
   loadHighlights();
 </script>
+
 
 
   <div id="page-loader"><div class="spinner"></div></div>

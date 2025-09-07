@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Dashboard | VinodFA</title>
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-<link rel="icon" href="IMG-20250904-WA0433.jpg" type="image/png">
+  <link rel="icon" href="IMG-20250904-WA0433.jpg" type="image/png">
   <style>
     body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f4f4f4; color: #333; }
-    header { background: #0a1a2f; padding: 1rem 2rem; color: white; text-align: center; }
+    header { background: #0a1a2f; padding: 1rem 2rem; color: white; text-align: center; display:flex; gap:1rem; align-items:center; justify-content:center; flex-wrap:wrap;}
+    header a { color:#fff; }
     main { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
     h2 { text-align: center; color: #0a1a2f; margin-bottom: 2rem; }
     form { margin-bottom: 3rem; }
@@ -19,15 +20,19 @@
     button:hover:enabled { background: #0077cc; }
     .spinner { border: 3px solid #f3f3f3; border-top: 3px solid #fff; border-radius: 50%; width: 16px; height: 16px; animation: spin 1s linear infinite; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .logout-btn { background: crimson; margin-top: 1rem; }
+    .logout-btn { background: crimson; }
+    .home-btn { background: royalblue; }
+    .manage-link { text-decoration:none; }
+    small.help { color:#666; display:block; margin-top:-0.5rem; margin-bottom:0.75rem; }
   </style>
 </head>
 <body>
 
   <header>
     <h1>Admin Dashboard</h1>
-    <a href="manage.html" style="text-decoration: none; color: #fff;"><p>Manage News • Fixtures • Stories</p></a>
+    <a class="manage-link" href="manage.html"><p>Manage News • Fixtures • Stories</p></a>
     <button id="logoutBtn" class="logout-btn">Logout</button>
+    <a href="index.html"><button class="home-btn">Go Home</button></a>
   </header>
 
   <main>
@@ -42,6 +47,7 @@
       <textarea id="newsBody" rows="4" required></textarea>
       <label for="newsImage">Image</label>
       <input type="file" id="newsImage" accept="image/*" required>
+      <small class="help">Tip: Use images under 1MB for faster upload.</small>
       <button type="submit" id="newsBtn">Add News</button>
     </form>
 
@@ -74,6 +80,7 @@
       <textarea id="storyDescription" rows="3" required></textarea>
       <label for="storyMedia">Media (Image/Video)</label>
       <input type="file" id="storyMedia" accept="image/*,video/*" required>
+      <small class="help">Large videos won’t be compressed here; prefer short clips.</small>
       <label for="storyCategory">Category</label>
       <select id="storyCategory" required>
         <option value="highlight">Highlight</option>
@@ -87,9 +94,8 @@
   <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCRQUjX6hPd79gFmrySgzjHwgeP61-1myI",
@@ -103,104 +109,168 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const storage = getStorage(app);
 
-    // Helper: Upload File to Storage
-    async function uploadFile(file, folder) {
-      const storageRef = ref(storage, `${folder}/${Date.now()}-${file.name}`);
-      await uploadBytes(storageRef, file);
-      return await getDownloadURL(storageRef);
+    // ——— Helpers ———
+    function bytesFromBase64DataUrl(dataUrl) {
+      const base64 = dataUrl.split(",")[1] || "";
+      return Math.ceil((base64.length * 3) / 4);
     }
 
-    // Helper: Show loading spinner
+    function resizeImage(file, maxWidth = 600, maxHeight = 600, quality = 0.6) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = event => {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = () => {
+            let { width, height } = img;
+            const aspect = width / height;
+            if (width > maxWidth) { width = maxWidth; height = Math.round(width / aspect); }
+            if (height > maxHeight) { height = maxHeight; width = Math.round(height * aspect); }
+            const canvas = document.createElement("canvas");
+            canvas.width = width; canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+            const out = canvas.toDataURL("image/jpeg", quality);
+            console.log("ℹ️ Compressed bytes:", bytesFromBase64DataUrl(out));
+            resolve(out);
+          };
+          img.onerror = reject;
+        };
+        reader.onerror = reject;
+      });
+    }
+
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+      });
+    }
+
     function setLoading(btn, loading, label) {
       if (loading) {
         btn.disabled = true;
+        btn.dataset.originalText = label;
         btn.innerHTML = `<div class="spinner"></div> Loading...`;
       } else {
         btn.disabled = false;
-        btn.textContent = label;
+        btn.textContent = btn.dataset.originalText || label;
       }
     }
 
-    // Logout
+    // ——— Logout ———
     document.getElementById("logoutBtn").addEventListener("click", async () => {
-      await signOut(auth);
-      window.location.href = "login.html";
+      try {
+        await signOut(auth);
+      } finally {
+        window.location.href = "login.html";
+      }
     });
 
-    // Add News
+    // ——— Add News ———
     const newsForm = document.getElementById("newsForm");
     const newsBtn = document.getElementById("newsBtn");
     newsForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+      if (newsBtn.disabled) return;
       setLoading(newsBtn, true, "Add News");
       try {
         const file = document.getElementById("newsImage").files[0];
-        const imageUrl = await uploadFile(file, "news-images");
-        await addDoc(collection(db, "news"), {
-          title: newsForm.newsTitle.value,
-          summary: newsForm.newsSummary.value,
-          body: newsForm.newsBody.value,
-          imageUrl,
+        if (!file) throw new Error("No image selected.");
+
+        let imageBase64 = await resizeImage(file, 600, 600, 0.6);
+        const sizeBytes = bytesFromBase64DataUrl(imageBase64);
+        console.log("✅ News image ready. Size(bytes):", sizeBytes);
+
+        const docRef = await addDoc(collection(db, "news"), {
+          title: newsForm.newsTitle.value.trim(),
+          summary: newsForm.newsSummary.value.trim(),
+          body: newsForm.newsBody.value.trim(),
+          imageBase64,
           createdAt: serverTimestamp()
         });
-        alert("News added!");
+
+        console.log("✅ News doc created:", docRef.id);
+        alert("✅ News added!");
         newsForm.reset();
       } catch (err) {
-        console.error(err);
-        alert("Error adding news.");
+        console.error("❌ Error adding news:", err);
+        alert("❌ Error adding news: " + (err?.message || err));
+      } finally {
+        setLoading(newsBtn, false, "Add News");
       }
-      setLoading(newsBtn, false, "Add News");
     });
 
-    // Add Fixture
+    // ——— Add Fixture ———
     const fixtureForm = document.getElementById("fixtureForm");
     const fixtureBtn = document.getElementById("fixtureBtn");
     fixtureForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+      if (fixtureBtn.disabled) return;
       setLoading(fixtureBtn, true, "Add Fixture");
       try {
-        await addDoc(collection(db, "fixtures"), {
-          opponent: fixtureForm.fixtureOpponent.value,
+        const payload = {
+          opponent: fixtureForm.fixtureOpponent.value.trim(),
           date: fixtureForm.fixtureDate.value,
           time: fixtureForm.fixtureTime.value,
-          venue: fixtureForm.fixtureVenue.value,
+          venue: fixtureForm.fixtureVenue.value.trim(),
           status: fixtureForm.fixtureStatus.value,
           createdAt: serverTimestamp()
-        });
-        alert("Fixture added!");
+        };
+        const docRef = await addDoc(collection(db, "fixtures"), payload);
+        console.log("✅ Fixture doc created:", docRef.id);
+        alert("✅ Fixture added!");
         fixtureForm.reset();
       } catch (err) {
-        console.error(err);
-        alert("Error adding fixture.");
+        console.error("❌ Error adding fixture:", err);
+        alert("❌ Error adding fixture: " + (err?.message || err));
+      } finally {
+        setLoading(fixtureBtn, false, "Add Fixture");
       }
-      setLoading(fixtureBtn, false, "Add Fixture");
     });
 
-    // Add Story
+    // ——— Add Story ———
     const storyForm = document.getElementById("storyForm");
     const storyBtn = document.getElementById("storyBtn");
     storyForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+      if (storyBtn.disabled) return;
       setLoading(storyBtn, true, "Add Story");
       try {
         const file = document.getElementById("storyMedia").files[0];
-        const mediaUrl = await uploadFile(file, "stories-media");
-        await addDoc(collection(db, "stories"), {
-          title: storyForm.storyTitle.value,
-          description: storyForm.storyDescription.value,
-          mediaUrl,
+        if (!file) throw new Error("No media selected.");
+
+        let mediaBase64 = null;
+        if (file.type.startsWith("image/")) {
+          mediaBase64 = await resizeImage(file, 800, 800, 0.6);
+        } else {
+          mediaBase64 = await fileToBase64(file);
+          const sizeBytes = bytesFromBase64DataUrl(mediaBase64);
+          if (sizeBytes > 950000) throw new Error("⚠️ Video too large for Firestore. Please upload a smaller clip.");
+        }
+
+        const payload = {
+          title: storyForm.storyTitle.value.trim(),
+          description: storyForm.storyDescription.value.trim(),
+          mediaBase64,
           category: storyForm.storyCategory.value,
           createdAt: serverTimestamp()
-        });
-        alert("Story added!");
+        };
+
+        const docRef = await addDoc(collection(db, "stories"), payload);
+        console.log("✅ Story doc created:", docRef.id);
+        alert("✅ Story added!");
         storyForm.reset();
       } catch (err) {
-        console.error(err);
-        alert("Error adding story.");
+        console.error("❌ Error adding story:", err);
+        alert("❌ Error adding story: " + (err?.message || err));
+      } finally {
+        setLoading(storyBtn, false, "Add Story");
       }
-      setLoading(storyBtn, false, "Add Story");
     });
   </script>
 </body>

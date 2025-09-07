@@ -8,202 +8,44 @@
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
   <link rel="icon" href="IMG-20250904-WA0433.jpg" type="image/png">
-   <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f4f4;
-      color: #333;
-    }
-    header {
-      background: #0a1a2f;
-      color: #fff;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    header .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-    nav a {
-      margin-left: 1rem;
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    .hero {
-      background: url('community-banner.jpg') center/cover no-repeat;
-      padding: 5rem 2rem;
-      color: white;
-      text-align: center;
-      background-color: #0a1a2f;
-    }
-    .hero h1 {
-      font-size: 3rem;
-      margin-bottom: 0.5rem;
-    }
-    .hero p {
-      font-size: 1.2rem;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-    .section {
-      padding: 3rem 2rem;
-    }
-    .section h2 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 2rem;
-      color: #0a1a2f;
-    }
-    .news-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-    }
-    .news-card {
-      background: white;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    .news-card img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-    }
-    .news-card .content {
-      padding: 1rem;
-    }
-    .news-card .content h3 {
-      margin: 0.5rem 0;
-      color: #0a1a2f;
-    }
-    .fixtures-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 2rem;
-    }
-    .fixtures-table th, .fixtures-table td {
-      padding: 1rem;
-      border: 1px solid #ddd;
-      text-align: center;
-    }
-    .fixtures-table th {
-      background-color: #0a1a2f;
-      color: white;
-    }
-    .newsletter {
-      background: #0a1a2f;
-      color: white;
-      padding: 3rem 2rem;
-      text-align: center;
-    }
-    .newsletter input[type="email"] {
-      padding: 0.8rem;
-      border: none;
-      border-radius: 4px;
-      width: 250px;
-      margin-right: 1rem;
-    }
-    .newsletter button {
-      padding: 0.8rem 1.5rem;
-      background: #005bb5;
-      border: none;
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    footer {
-      background: #0a1a2f;
-      color: white;
-      text-align: center;
-      padding: 1rem;
-    }
-  /* Modal overlay */
-  #newsModal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.6);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
 
-  /* Modal box */
-  #newsModal .modal-content {
-    background: white;
-    border-radius: 10px;
-    max-width: 800px;
-    width: 90%;
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    max-height: 90vh;
-    overflow: hidden;
-    padding: 1rem;
-  }
+  <style>
+    body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f4f4f4; color: #333; }
+    header { background: #0a1a2f; color: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+    header .logo { font-size: 1.5rem; font-weight: bold; }
+    nav a { margin-left: 1rem; color: white; text-decoration: none; font-weight: 500; }
+    .hero { background: url('community-banner.jpg') center/cover no-repeat; padding: 5rem 2rem; color: white; text-align: center; background-color: #0a1a2f; }
+    .hero h1 { font-size: 3rem; margin-bottom: 0.5rem; }
+    .hero p { font-size: 1.2rem; max-width: 700px; margin: 0 auto; }
+    .section { padding: 3rem 2rem; }
+    .section h2 { text-align: center; font-size: 2rem; margin-bottom: 2rem; color: #0a1a2f; }
+    .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .news-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .news-card img { width: 100%; height: 180px; object-fit: cover; }
+    .news-card .content { padding: 1rem; }
+    .news-card .content h3 { margin: 0.5rem 0; color: #0a1a2f; }
+    .fixtures-table { width: 100%; border-collapse: collapse; margin-top: 2rem; }
+    .fixtures-table th, .fixtures-table td { padding: 1rem; border: 1px solid #ddd; text-align: center; }
+    .fixtures-table th { background-color: #0a1a2f; color: white; }
+    .newsletter { background: #0a1a2f; color: white; padding: 3rem 2rem; text-align: center; }
+    .newsletter input[type="email"] { padding: 0.8rem; border: none; border-radius: 4px; width: 250px; margin-right: 1rem; }
+    .newsletter button { padding: 0.8rem 1.5rem; background: #005bb5; border: none; color: white; border-radius: 4px; cursor: pointer; }
+    footer { background: #0a1a2f; color: white; text-align: center; padding: 1rem; }
 
-  /* Media container */
-  #modalMediaContainer {
-    overflow: hidden;
-    border-radius: 10px;
-  }
-
-  #modalMediaContainer img,
-  #modalMediaContainer video {
-    width: 100%;
-    border-radius: 10px;
-    display: block;
-  }
-
-  /* Text side */
-  #newsModal .text-side {
-    overflow-y: auto;
-    padding-right: 0.5rem;
-  }
-
-  #newsModal h3 {
-    margin-top: 0;
-    color: #0a1a2f;
-  }
-
-  #newsModal p {
-    line-height: 1.6;
-    color: #444;
-  }
-
-  /* Close button */
-  #newsModal .close {
-    position: absolute;
-    top: 10px; right: 15px;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-
-  /* Mobile responsive: stack layout */
-  @media (max-width: 768px) {
-    #newsModal .modal-content {
-      grid-template-columns: 1fr;
-      max-height: 90vh;
-    }
-    #modalMediaContainer {
-      max-height: 40vh;
-    }
-    #newsModal .text-side {
-      max-height: 50vh;
-    }
-  }
+    /* Modal */
+    #newsModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000; }
+    #newsModal .modal-content { background: white; border-radius: 10px; max-width: 800px; width: 90%; position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-height: 90vh; overflow: hidden; padding: 1rem; }
+    #modalMediaContainer { overflow: hidden; border-radius: 10px; }
+    #modalMediaContainer img, #modalMediaContainer video { width: 100%; border-radius: 10px; display: block; }
+    #newsModal .text-side { overflow-y: auto; padding-right: 0.5rem; }
+    #newsModal h3 { margin-top: 0; color: #0a1a2f; }
+    #newsModal p { line-height: 1.6; color: #444; }
+    #newsModal .close { position: absolute; top: 10px; right: 15px; font-size: 1.5rem; cursor: pointer; }
+    @media (max-width: 768px) { #newsModal .modal-content { grid-template-columns: 1fr; max-height: 90vh; } #modalMediaContainer { max-height: 40vh; } #newsModal .text-side { max-height: 50vh; } }
   </style>
 </head>
 <body>
- <header class="header" id="header">
+  <header class="header" id="header">
     <a href="index.html" class="logo-link"><span>Vinod</span> Football Academy</a>
     <nav class="navigation" id="navigation">
       <a href="index.html" class="link">Home</a>
@@ -211,261 +53,176 @@
       <a href="#" class="link">Community</a>
       <a href="contact.html" class="link">Contact us</a>
     </nav>
-<button id="darkModeToggle" class="dark-toggle">
-  <i class='bx bx-moon'></i>
-</button>
-
+    <button id="darkModeToggle" class="dark-toggle"><i class='bx bx-moon'></i></button>
   </header>
 
-<section class="hero">
-  <h1>Community Hub</h1>
-  <p>Stay updated with team news, match fixtures, academy announcements, and more.</p>
-</section>
+  <section class="hero">
+    <h1>Community Hub</h1>
+    <p>Stay updated with team news, match fixtures, academy announcements, and more.</p>
+  </section>
 
-<section class="section">
-  <h2>Team News</h2>
-  <div class="news-grid" id="news-grid">
-    <div class="news-card">
-      <img src="IMG-20250613-WA0392.jpg" alt="News">
-      <div class="content">
-        <h3>Kickstarting the league with victory</h3>
-        <p class="in">A dream start to our ikeja super league...</p>
-       <a href="#" class="btnn" onclick="openNews(0)">Read more</a>
-
-
-      </div>
+  <section class="section">
+    <h2>Team News</h2>
+    <div id="news-grid" class="news-grid">
+      <!-- News from Firestore will load here -->
     </div>
-    <div class="news-card">
-      <img src="0483f178988540a197a02ba9cc816b09.jpg" alt="News" id="news2">
-      <div class="content">
-        <h3>Full time at home</h3>
-        <p class="in">Back to back 2-0 win.Clean shit...</p>
-        <a href="#" class="btnn" onclick="openNews(1)">Read more</a>
+  </section>
 
-      </div>
-    </div>
-    <!-- News from Firestore will load here -->
-  </div>
-</section>
+  <section class="section">
+    <h2>Match Fixtures</h2>
+    <table class="fixtures-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Opponent</th>
+          <th>Venue</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="fixtures-body"></tbody>
+    </table>
+  </section>
 
-<section class="section">
-  <h2>Match Fixtures</h2>
-  <table class="fixtures-table">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Time</th>
-        <th>Opponent</th>
-        <th>Venue</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody id="fixtures-body">
-      <!-- Fixtures from Firestore will load here -->
-    </tbody>
-  </table>
-</section>
+  <section class="newsletter">
+    <h2>Stay Updated</h2>
+    <p>Get the latest news and fixtures delivered to your inbox.</p>
+    <form action="https://formspree.io/f/movwdlro" method="POST">
+      <input type="email" name="email" placeholder="Enter your email" required>
+      <button type="submit">Subscribe</button>
+    </form>
+  </section>
 
+  <footer>
+    <p>&copy; 2025 Vinod Football Academy. All rights reserved.</p>
+  </footer>
 
-<section class="newsletter">
-  <h2>Stay Updated</h2>
-  <p>Get the latest news and fixtures delivered to your inbox.</p>
-  <form action="https://formspree.io/f/movwdlro" method="POST">
-    <input type="email" name="email" placeholder="Enter your email" required>
-    <button type="submit">Subscribe</button>
-  </form>
-</section>
+  <div id="page-loader"><div class="spinner"></div></div>
 
-<footer>
-  <p>&copy; 2025 Vinod Football Academy. All rights reserved.</p>
-</footer>
-
-<div id="page-loader">
-  <div class="spinner"></div>
-</div>
-<!-- News Modal -->
-<div id="newsModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeNews()">&times;</span>
-
-    <!-- Left side (media) -->
-    <div id="modalMediaContainer">
-      <!-- Image or Video will load here -->
-    </div>
-
-    <!-- Right side (text) -->
-    <div class="text-side">
-      <h3 id="modalTitle">Full News</h3>
-      <p id="modalBody"></p>
-      <div style="margin-top:1rem; text-align:center;">
-        <button onclick="showPrev()" style="margin-right:1rem;">⬅ Prev</button>
-        <button onclick="showNext()">Next ➡</button>
+  <!-- News Modal -->
+  <div id="newsModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeNews()">&times;</span>
+      <div id="modalMediaContainer"></div>
+      <div class="text-side">
+        <h3 id="modalTitle">Full News</h3>
+        <p id="modalBody"></p>
+        <div style="margin-top:1rem; text-align:center;">
+          <button onclick="showPrev()" style="margin-right:1rem;">⬅ Prev</button>
+          <button onclick="showNext()">Next ➡</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
+    const firebaseConfig = {
+      apiKey: "AIzaSyCRQUjX6hPd79gFmrySgzjHwgeP61-1myI",
+      authDomain: "vinodfa-b085a.firebaseapp.com",
+      projectId: "vinodfa-b085a",
+      storageBucket: "vinodfa-b085a.appspot.com",
+      messagingSenderId: "692083333518",
+      appId: "1:692083333518:web:2b32948d357e5067222cdf"
+    };
 
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
+    const newsGrid = document.getElementById("news-grid");
+    const fixturesBody = document.getElementById("fixtures-body");
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-  import { 
-    getFirestore, collection, query, orderBy, onSnapshot 
-  } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+    const newsQuery = query(collection(db, "news"), orderBy("createdAt", "desc"));
+    const fixtureQuery = query(collection(db, "fixtures"), orderBy("date", "asc"));
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCRQUjX6hPd79gFmrySgzjHwgeP61-1myI",
-    authDomain: "vinodfa-b085a.firebaseapp.com",
-    projectId: "vinodfa-b085a",
-    storageBucket: "vinodfa-b085a.appspot.com",
-    messagingSenderId: "692083333518",
-    appId: "1:692083333518:web:2b32948d357e5067222cdf"
-  };
+    window.newsData = [];
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+    // News
+    onSnapshot(newsQuery, (snapshot) => {
+      newsGrid.innerHTML = "";
+      window.newsData = snapshot.docs.map(doc => doc.data());
 
-  // ================== Realtime News ==================
-  const newsGrid = document.getElementById("news-grid");
-  const newsQuery = query(collection(db, "news"), orderBy("createdAt", "desc"));
-  window.newsData = [];
+      window.newsData.forEach((news, index) => {
+        const newsCard = document.createElement("div");
+        newsCard.classList.add("news-card");
 
-  onSnapshot(newsQuery, (snapshot) => {
-    newsGrid.innerHTML = "";
-    window.newsData = snapshot.docs.map(doc => doc.data());
+        let mediaElement = "";
+        if (news.imageUrl && news.imageUrl.endsWith(".mp4")) {
+          mediaElement = `<video src="${news.imageUrl}" controls style="width:100%; height:180px; object-fit:cover;"></video>`;
+        } else {
+          mediaElement = `<img src="${news.imageUrl || 'default-news.jpg'}" alt="${news.title}">`;
+        }
 
-    window.newsData.forEach((news, index) => {
-      const newsCard = document.createElement("div");
-      newsCard.classList.add("news-card");
+        newsCard.innerHTML = `
+          ${mediaElement}
+          <div class="content">
+            <h3>${news.title}</h3>
+            <p class="in">${news.summary || ''}</p>
+            <a href="#" class="btnn" onclick="openNews(${index})">Read more</a>
+          </div>
+        `;
+        newsGrid.appendChild(newsCard);
+      });
+    });
 
-      // Detect video or image
-      let mediaElement = "";
+    // Fixtures
+    onSnapshot(fixtureQuery, (snapshot) => {
+      fixturesBody.innerHTML = "";
+      snapshot.forEach(doc => {
+        const f = doc.data();
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${f.date}</td>
+          <td>${f.time}</td>
+          <td>${f.opponent}</td>
+          <td>${f.venue}</td>
+          <td>${f.status}</td>
+        `;
+        fixturesBody.appendChild(row);
+      });
+    });
+  </script>
+
+  <script>
+    let currentNewsIndex = 0;
+
+    function openNews(index) {
+      currentNewsIndex = index;
+      const modal = document.getElementById('newsModal');
+      const title = document.getElementById('modalTitle');
+      const body = document.getElementById('modalBody');
+      const mediaContainer = document.getElementById('modalMediaContainer');
+      const news = window.newsData[index];
+
       if (news.imageUrl && news.imageUrl.endsWith(".mp4")) {
-        mediaElement = `<video src="${news.imageUrl}" controls style="width:100%; height:180px; object-fit:cover;"></video>`;
+        mediaContainer.innerHTML = `<video src="${news.imageUrl}" controls style="width:100%; border-radius:10px;"></video>`;
       } else {
-        mediaElement = `<img src="${news.imageUrl || 'default-news.jpg'}" alt="${news.title}">`;
+        mediaContainer.innerHTML = `<img src="${news.imageUrl || 'default-news.jpg'}" alt="News Image" style="width:100%; border-radius:10px;">`;
       }
 
-      newsCard.innerHTML = `
-        ${mediaElement}
-        <div class="content">
-          <h3>${news.title}</h3>
-          <p class="in">${news.summary || ''}</p>
-          <a href="#" class="btnn" onclick="openNews(${index})">Read more</a>
-        </div>
-      `;
-      newsGrid.appendChild(newsCard);
-    });
-  });
-
-  // ================== Realtime Fixtures ==================
-  const fixturesBody = document.getElementById("fixtures-body");
-  const fixtureQuery = query(collection(db, "fixtures"), orderBy("date", "asc"));
-
-  // Hide loader once first data is fetched
-function hideLoader() {
-  const loader = document.getElementById("page-loader");
-  if (loader) loader.style.display = "none";
-}
-
-// Call hideLoader once news & fixtures load at least once
-let newsLoaded = false;
-let fixturesLoaded = false;
-
-onSnapshot(newsQuery, (snapshot) => {
-  newsGrid.innerHTML = "";
-  window.newsData = [];
-
-  snapshot.forEach((doc, index) => {
-    const news = doc.data();
-    window.newsData.push(news);
-
-    const newsCard = document.createElement("div");
-    newsCard.classList.add("news-card", "fade-in");
-
-    newsCard.innerHTML = `
-      <img src="${news.imageUrl || 'default-news.jpg'}" alt="${news.title}">
-      <div class="content">
-        <h3>${news.title}</h3>
-        <p class="in">${news.summary || ''}</p>
-        <a href="#" class="btnn" onclick="openNews(${index})">Read more</a>
-      </div>
-    `;
-
-    newsGrid.appendChild(newsCard);
-  });
-
-  newsLoaded = true;
-  if (fixturesLoaded) hideLoader();
-});
-
-onSnapshot(fixtureQuery, (snapshot) => {
-  fixturesBody.innerHTML = "";
-
-  snapshot.forEach(doc => {
-    const f = doc.data();
-    const row = document.createElement("tr");
-    row.classList.add("fade-in");
-    row.innerHTML = `
-      <td>${f.date}</td>
-      <td>${f.time}</td>
-      <td>${f.opponent}</td>
-      <td>${f.venue}</td>
-      <td>${f.status}</td>
-    `;
-    fixturesBody.appendChild(row);
-  });
-
-  fixturesLoaded = true;
-  if (newsLoaded) hideLoader();
-});
-
-</script>
-
-<script>
-  let currentNewsIndex = 0;
-
-  function openNews(index) {
-    currentNewsIndex = index;
-    const modal = document.getElementById('newsModal');
-    const title = document.getElementById('modalTitle');
-    const body = document.getElementById('modalBody');
-    const mediaContainer = document.getElementById('modalMediaContainer');
-
-    const news = window.newsData[index];
-
-    // Replace media dynamically
-    if (news.imageUrl && news.imageUrl.endsWith(".mp4")) {
-      mediaContainer.innerHTML = `<video src="${news.imageUrl}" controls style="width:100%; border-radius:10px;"></video>`;
-    } else {
-      mediaContainer.innerHTML = `<img src="${news.imageUrl || 'default-news.jpg'}" alt="News Image" style="width:100%; border-radius:10px;">`;
+      title.textContent = news.title;
+      body.textContent = news.body || news.summary || "";
+      modal.style.display = 'flex';
     }
 
-    title.textContent = news.title;
-    body.textContent = news.body || news.summary || "";
+    function showPrev() {
+      currentNewsIndex = (currentNewsIndex - 1 + window.newsData.length) % window.newsData.length;
+      openNews(currentNewsIndex);
+    }
 
-    modal.style.display = 'flex';
-  }
+    function showNext() {
+      currentNewsIndex = (currentNewsIndex + 1) % window.newsData.length;
+      openNews(currentNewsIndex);
+    }
 
-  function showPrev() {
-    currentNewsIndex = (currentNewsIndex - 1 + window.newsData.length) % window.newsData.length;
-    openNews(currentNewsIndex);
-  }
+    function closeNews() {
+      document.getElementById('newsModal').style.display = 'none';
+    }
+  </script>
 
-  function showNext() {
-    currentNewsIndex = (currentNewsIndex + 1) % window.newsData.length;
-    openNews(currentNewsIndex);
-  }
-
-  function closeNews() {
-    document.getElementById('newsModal').style.display = 'none';
-  }
-</script>
-
-
-
-
+  <script src="script.js"></script>
 </body>
 </html>
